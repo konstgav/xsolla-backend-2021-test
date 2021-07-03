@@ -1,75 +1,105 @@
-from flask import Flask
-from flask_restful import reqparse, abort, Api, Resource
+from flask import Flask, jsonify
+from flask_restful import reqparse, abort, Api, Resource, fields, marshal_with
+from flask_mongoengine import MongoEngine
 
 app = Flask(__name__)
 api = Api(app)
+app.config['MONGODB_SETTINGS'] = {
+    'db': 'products',
+    'host': 'localhost',
+    'port': 27017
+}
+db = MongoEngine()
+db.init_app(app)
 
-# Generate test dataset 
-PRODUCTS = [
-    {'id': 0, 'sku': 'a0', 'name': 'tank', 'type': 'item', 'price': 124},
-    {'id': 1, 'sku': 'a1', 'name': 'coin', 'type': 'item', 'price': 1},
-    {'id': 2, 'sku': 'a2', 'name': 'rainbow', 'type': 'item', 'price': 200},
-    {'id': 3, 'sku': 'a3', 'name': 't-shirt', 'type': 'merch', 'price': 5},
-    {'id': 4, 'sku': 'a4', 'name': 'lipstick', 'type': 'merch', 'price': 6},
-    {'id': 5, 'sku': 'a5', 'name': 'cup', 'type': 'merch', 'price': 4}
-]
+class ProductModel(db.Document):
+    _id = db.IntField()
+    sku = db.StringField()
+    name = db.StringField()
+    type = db.StringField()
+    price = db.IntField()
+    meta = {'collection': 'productmodel'}
 
-def abort_if_product_not_exist(id):
-    if not any(product['id'] == id for product in PRODUCTS):
-        abort(404, message = f"Product with id = {id} doesn't exist")
+def get_product_or_abort(id):
+    product = ProductModel.objects.get_or_404(_id=id)
+    return product
 
 parser = reqparse.RequestParser()
-parser.add_argument('id', type=int, help='id must be integer')
+parser.add_argument('_id', type=int, help='id must be integer')
 parser.add_argument('sku', type=str)
 parser.add_argument('name', type=str)
 parser.add_argument('type', type=str)
 parser.add_argument('price', type=int, help='price must be integer')
+#parser.add_argument('page', type=int, help='page must be integer')
+#parser.add_argument('limit_per_page', type=int, help='limit_per_page must be integer')
 
+resource_fields = {
+    '_id': fields.Integer,
+    'sku': fields.String,
+    'name': fields.String,
+    'type': fields.String,
+    'price': fields.Integer
+}
 # Shows a single product item, lets you delete a product item, create a new product item
 class Product(Resource):
+    @marshal_with(resource_fields)
     def get(self, id):
-        abort_if_product_not_exist(id)
-        return next((product for product in PRODUCTS if product['id'] == id), None)
-
+        product = get_product_or_abort(id)
+        return product
+        
+    @marshal_with(resource_fields)
     def delete(self, id):
-        abort_if_product_not_exist(id)
-        for i in range(len(PRODUCTS)):
-            if PRODUCTS[i]['id'] == id:
-                del PRODUCTS[i]
-                break
-        return '', 204
+        #product = get_product_or_abort(id)
+        #product.delete()
+        ProductModel.objects(_id=id).delete()
+        return f'Product with id = {id} deleted!', 204
 
+    @marshal_with(resource_fields)
     def put(self, id):
-        abort_if_product_not_exist(id)
+        product = get_product_or_abort(id)
+        body = request.get_json()
+        product.update(**body)
+        return product, 200
+        '''
         args = parser.parse_args()
-        for i in range(len(PRODUCTS)):
-            if PRODUCTS[i]['id'] == id:
-                if args['sku'] != None:
-                    PRODUCTS[i]['sku'] = args['sku'] 
-                if args['name'] != None:
-                    PRODUCTS[i]['name'] = args['name']
-                if args['type'] != None:
-                    PRODUCTS[i]['type'] = args['type']
-                if args['price'] != None:
-                    PRODUCTS[i]['price'] = args['price']
-                break
-        return PRODUCTS[i], 201
+        if args['sku']:
+            product.update(sku = args['sku'])
+            product.save()
+        if args['name']:
+            product.update(name = args['name'])
+            product.save()
+        if args['type']:
+            product.update(type = args['type'])
+            product.save()
+        if args['price']:
+            product.update(price = args['price'])
+            product.save()
+        return f'Product with id = {id} updated!', 200 '''
 
 # Shows a list of all products and lets you POST to add new product
-class ProductList(Resource):
+class ProductsList(Resource):
+    @marshal_with(resource_fields)
     def get(self):
-        return PRODUCTS
-
-    def post(self):
-        id = max(product['id'] for product in PRODUCTS) + 1
         args = parser.parse_args()
-        product = {'id': id, 'sku': args['sku'], 'name': args['name'], 'type': args['type'], 'price': args['price']}
-        PRODUCTS.append(product)
+        page = 1
+#        if args['page']:
+#            page = args['page']
+        limit = 10
+#        if args['limit_per_page']:
+#            limit = args['limit_per_page']
+        products = ProductModel.objects.paginate(page=page, per_page=limit)
+        return products.items, 200
+        
+    @marshal_with(resource_fields)
+    def post(self):
+        id = ProductModel.objects().order_by("-_id").limit(-1).first()["_id"] + 1
+        args = parser.parse_args()
+        product = ProductModel(_id=id, sku=args['sku'], name=args['name'], type=args['type'], price=args['price']).save()
         return product, 201
 
 ## Setup the Api resource routing
 api.add_resource(Product, '/product/<int:id>')
-api.add_resource(ProductList, '/products')
+api.add_resource(ProductsList, '/products')
 
 if __name__ == '__main__':
     app.run(debug = True)

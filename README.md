@@ -49,17 +49,27 @@ curl http://localhost:5000/product/1 -d "name=lucky coin" -d "price=9" -X PUT
 3. **Удаление товара по его идентификатору** 
 
 ```bash
-curl 'http://localhost:5000/product/3' -X DELETE
+curl http://localhost:5000/product/3 -X DELETE
 ```
 
 4. **Получение информации о товаре по его идентификатору**
 
 ```bash
-curl 'http://localhost:5000/product/0'
+curl http://localhost:5000/product/0
 ```
 
 5. **Получение каталога товаров**
 
 ```bash
-curl 'http://localhost:5000/products'
+curl http://localhost:5000/products
 ```
+
+
+docker create -it --name MongoTest -p 5000:27017 mongo
+docker start MongoTest
+docker stop MongoTest
+
+pip install flask
+pip install pymongo
+flask_mongoengine
+pip install -r requirements.txt
