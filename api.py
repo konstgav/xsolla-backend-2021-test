@@ -1,5 +1,5 @@
-from flask import Flask, jsonify
-from flask_restful import reqparse, abort, Api, Resource, fields, marshal_with
+from flask import Flask
+from flask_restful import reqparse, Api, Resource, fields, marshal_with
 from flask_mongoengine import MongoEngine
 
 app = Flask(__name__)
@@ -57,24 +57,17 @@ class Product(Resource):
     @marshal_with(resource_fields)
     def put(self, id):
         product = get_product_or_abort(id)
-        body = request.get_json()
-        product.update(**body)
-        return product, 200
-        '''
         args = parser.parse_args()
         if args['sku']:
-            product.update(sku = args['sku'])
-            product.save()
+            ProductModel.objects(_id=id).update(sku = args['sku'])
         if args['name']:
-            product.update(name = args['name'])
-            product.save()
+            ProductModel.objects(_id=id).update(name = args['name'])
         if args['type']:
-            product.update(type = args['type'])
-            product.save()
+            ProductModel.objects(_id=id).update(type = args['type'])
         if args['price']:
-            product.update(price = args['price'])
-            product.save()
-        return f'Product with id = {id} updated!', 200 '''
+            ProductModel.objects(_id=id).update(price = args['price'])
+        product = get_product_or_abort(id)
+        return product, 200
 
 # Shows a list of all products and lets you POST to add new product
 class ProductsList(Resource):
