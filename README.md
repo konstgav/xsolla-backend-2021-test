@@ -19,10 +19,10 @@ Test for Xsolla School 2021. Backend: RESTful API for e-commerce game developer'
 
 1. Информация о товарах хранится в локальной базе данных mongodb, для работы с которой используется отображение объектов в документы (ODM) [MongoEngine](http://mongoengine.org/).
 2. Создан скрипт `prepare_mongo.py`, который наполняет СУБД тестовыми данными из набора `test_dataset.json`.
-3. Фильтрация товаров по их типу и/или стоимости в **Методе получения каталога товаров**.
-4. Спецификация OpenAPI [3.0](https://swagger.io/specification/). Документация для разработанного REST API.
-5. Создать Dockerfile для создания образа приложения системы. Желательно наличие файла Docker-compose.
-6. Разработать модульные и функциональные тесты.
+3. Созданы модульные тесты
+4. Фильтрация товаров по их типу и/или стоимости в **Методе получения каталога товаров**.
+5. Спецификация OpenAPI [3.0](https://swagger.io/specification/). Документация для разработанного REST API.
+6. Создать Dockerfile для создания образа приложения системы. Желательно наличие файла Docker-compose.
 7. Развернуть приложение на [heroku](https://www.heroku.com/).
 8. Реализовать frontend при помощи bootstrap.
 
@@ -64,13 +64,28 @@ curl http://localhost:5000/product/0
 curl http://localhost:5000/products
 ```
 
-python3 -m unittest -v utest_calc.py
+## Запуск модульных тестов
 
-docker create -it --name MongoTest -p 5000:27017 mongo
-docker start MongoTest
-docker stop MongoTest
+```bash
+python3 -m unittest -v utest_api_resources.py
+```
 
-pip install flask
-pip install pymongo
-flask_mongoengine
-pip install -r requirements.txt
+## Работа с Docker-контейнерами
+
+```bash
+docker-compose up -d
+docker-compose up -d --no-deps --build flask
+docker kill -f $(docker ps -a -q)
+docker rm -f $(docker ps -a -q)
+docker rmi -f $(docker images -a -q)
+docker exec -it flask bash
+docker login
+docker build -t konstgav/api-xsolla-test:0.1 .
+docker push konstgav/api-xsolla-test:0.1
+docker container run -it --rm -p 5000:5000 konstgav/api-xsolla-test:0.1
+docker create -it --name api-test -p 5000:5000 mongo
+docker start api-test
+docker stop api-test
+```
+
+Образ доступет по ссылке dockerhub

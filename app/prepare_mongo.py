@@ -3,7 +3,7 @@ from pymongo import MongoClient
 import json
 
 dataset_filename = "test_dataset.json"
-database_name = "products"
+database_name = "product"
 collection_name = "productmodel"
 
 client = MongoClient()

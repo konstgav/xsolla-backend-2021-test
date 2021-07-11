@@ -1,16 +1,16 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_restful import reqparse, Api, Resource, fields, marshal_with
 from flask_mongoengine import MongoEngine
 
-app = Flask(__name__)
-api = Api(app)
-app.config['MONGODB_SETTINGS'] = {
-    'db': 'products',
-    'host': 'localhost',
+application = Flask(__name__)
+api = Api(application)
+application.config['MONGODB_SETTINGS'] = {
+    'db': 'product',
+    'host': 'mongo-host',
     'port': 27017
 }
 db = MongoEngine()
-db.init_app(app)
+db.init_app(application)
 
 class ProductModel(db.Document):
     _id = db.IntField()
@@ -40,6 +40,14 @@ resource_fields = {
     'type': fields.String,
     'price': fields.Integer
 }
+
+@application.route('/')
+def index():
+    return jsonify(
+        status=True,
+        message='Welcome to the Dockerized Flask MongoDB app !'
+    )
+
 # Shows a single product item, lets you delete a product item, create a new product item
 class Product(Resource):
     @marshal_with(resource_fields)
@@ -95,4 +103,4 @@ api.add_resource(Product, '/product/<int:id>')
 api.add_resource(ProductsList, '/products')
 
 if __name__ == '__main__':
-    app.run(debug = True)
+    application.run(host='0.0.0.0', port=5000, debug=True)

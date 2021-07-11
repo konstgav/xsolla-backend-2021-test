@@ -1,7 +1,6 @@
 import unittest
 from warnings import catch_warnings
 import requests
-from pymongo import MongoClient
 import prepare_mongo
 
 server = 'localhost:5000'
