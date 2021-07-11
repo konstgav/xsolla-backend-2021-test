@@ -66,6 +66,12 @@ curl http://localhost:5000/products
 
 ## Запуск модульных тестов
 
+Для тестирования необходимо установить пакеты `pymongo`, `requests` командой
+```bash
+pip3 install pymongo
+pip3 install requests
+```
+Запуск модульных тестов командой
 ```bash
 python3 -m unittest -v utest_api_resources.py
 ```
