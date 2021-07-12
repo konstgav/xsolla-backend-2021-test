@@ -1,0 +1,149 @@
+openapi: 3.0.1
+info:
+  title: Test for Xsolla School 2021. Backend.
+  description: 'RESTful API for e-commerce game developers system which allows to create, read, update and delete products.'
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: gavrilov_k@inbox.ru
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+externalDocs:
+  description: GitHub repository for this project
+  url: https://github.com/konstgav/xsolla-backend-2021-test
+tags:
+- name: product
+  description: All data about products
+paths:
+  /product/{_id}:
+    put:
+      tags:
+      - product
+      summary: Update an existing product
+      operationId: updateProduct
+      parameters:
+      - name: _id
+        in: path
+        description: Id of the product that need to be updated
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Product object that needs to be updated in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+        required: true
+      responses:
+        404:
+          description: Product not found
+          content: {}
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'  
+    get:
+      tags:
+      - product
+      summary: Get the pet from the store
+      operationId: getProduct
+      parameters:
+      - name: _id
+        in: path
+        description: Id of the product that need to be read
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+    delete:
+      tags:
+      - product
+      summary: Deletes a product
+      operationId: deleteProduct
+      parameters:
+      - name: _id
+        in: path
+        description: Id of the product that need to be deleted
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        404:
+          description: Product not found
+          content: {}
+  /products:
+    get:
+      tags:
+      - product
+      summary: Find all products
+      description: Get all products
+      operationId: getAllProducts
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        404:
+          description: Product not found
+          content: {}
+    post:
+      tags:
+      - product
+      summary: Create new product
+      description: Create new product
+      operationId: createNewProduct
+      requestBody:
+        description: Product object that needs to be added to the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+        required: true
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        404:
+          description: Product not found
+          content: {}
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: integer
+          format: int64
+        sku:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        price:
+          type: integer
+          format: int64
+      xml:
+        name: Product

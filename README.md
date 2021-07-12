@@ -19,12 +19,10 @@ Test for Xsolla School 2021. Backend: RESTful API for e-commerce game developer'
 
 1. Информация о товарах хранится в локальной базе данных mongodb, для работы с которой используется отображение объектов в документы (ODM) [MongoEngine](http://mongoengine.org/).
 2. Создан скрипт `prepare_mongo.py`, который наполняет СУБД тестовыми данными из набора `test_dataset.json`.
-3. Созданы модульные тесты
+3. Созданы модульные тесты `utest_api_resources.py`
 4. Фильтрация товаров по их типу и/или стоимости в **Методе получения каталога товаров**.
-5. Спецификация OpenAPI [3.0](https://swagger.io/specification/). Документация для разработанного REST API.
-6. Создать Dockerfile для создания образа приложения системы. Желательно наличие файла Docker-compose.
-7. Развернуть приложение на [heroku](https://www.heroku.com/).
-8. Реализовать frontend при помощи bootstrap.
+5. Составлена спецификация OpenAPI 3.0 в `openapi.yaml`.
+6. Созданы Dockerfile для создания образа с flask-приложением и Docker-compose файл для развертывания приложения.
 
 ## Способ тестирования приложения
 
