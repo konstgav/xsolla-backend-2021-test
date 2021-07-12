@@ -26,11 +26,24 @@ Test for Xsolla School 2021. Backend: RESTful API for e-commerce game developer'
 
 ## Способ тестирования приложения
 
-Для запуска приложения необходимо перейти рабочую директорию проекта и в командной строке выполнить команду
+Для развертывания приложения с помощью `docker-compose` необходимо выполнить команды:  
 
 ```bash
-python3 api.py
+git clone https://github.com/konstgav/xsolla-backend-2021-test.git
+cd xsolla-backend-2021-test
+docker-compose up 
 ```
+
+Для тестирования используются пакеты `pymongo`, `requests`, `unittest`. Для запуска автотестов выполните команды:
+
+```bash
+pip3 install pymongo
+pip3 install requests
+cd app
+python3 -m unittest -v utest_api_resources.py
+```
+
+Автотесты содержат следующие запросы к приложению. Можно провести тестирование в ручном режиме при помощи следующих команд:
 
 1. **Создание товара**
 
@@ -62,19 +75,7 @@ curl http://localhost:5000/product/0
 curl http://localhost:5000/products
 ```
 
-## Запуск модульных тестов
-
-Для тестирования необходимо установить пакеты `pymongo`, `requests` командой
-```bash
-pip3 install pymongo
-pip3 install requests
-```
-Запуск модульных тестов командой
-```bash
-python3 -m unittest -v utest_api_resources.py
-```
-
-## Работа с Docker-контейнерами
+## Часто используемые команды для работа с Docker-контейнерами
 
 ```bash
 docker-compose up -d
@@ -83,13 +84,4 @@ docker kill -f $(docker ps -a -q)
 docker rm -f $(docker ps -a -q)
 docker rmi -f $(docker images -a -q)
 docker exec -it flask bash
-docker login
-docker build -t konstgav/api-xsolla-test:0.1 .
-docker push konstgav/api-xsolla-test:0.1
-docker container run -it --rm -p 5000:5000 konstgav/api-xsolla-test:0.1
-docker create -it --name api-test -p 5000:5000 mongo
-docker start api-test
-docker stop api-test
 ```
-
-Образ доступет по ссылке dockerhub
