@@ -6,7 +6,7 @@ application = Flask(__name__)
 api = Api(application)
 application.config['MONGODB_SETTINGS'] = {
     'db': 'product',
-   # 'host': 'mongo-host',
+    'host': 'mongo-host',
     'port': 27017
 }
 db = MongoEngine()
