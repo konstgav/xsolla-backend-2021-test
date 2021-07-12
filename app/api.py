@@ -34,6 +34,7 @@ parser.add_argument('price', type=int, help='price must be integer')
 paginator_parser = reqparse.RequestParser()
 paginator_parser.add_argument('page', type=int, help='page must be integer')
 paginator_parser.add_argument('limit_per_page', type=int, help='limit_per_page must be integer')
+paginator_parser.add_argument('type', type=str)
 
 resource_fields = {
     '_id': fields.Integer,
@@ -84,15 +85,17 @@ class ProductsList(Resource):
     @marshal_with(resource_fields)
     def get(self):
         args = paginator_parser.parse_args()
-        print(args)
         page = 1
         if args['page']:
             page = args['page']
         limit = 10
         if args['limit_per_page']:
             limit = args['limit_per_page']
-            print(limit) 
-        products = ProductModel.objects.paginate(page=page, per_page=limit)
+        if args['type']:
+            type = args['type']
+            products = ProductModel.objects(type=type).paginate(page=page, per_page=limit)
+        else:
+            products = ProductModel.objects.paginate(page=page, per_page=limit)
         return products.items, 200
         
     @marshal_with(resource_fields)
