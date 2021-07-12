@@ -16,7 +16,9 @@ class ApiTest(unittest.TestCase):
  
     def test_read_all(self):
         try:
-            response = requests.get('http://'+server+'/products')
+            limit_per_page = 2
+            response = requests.get('http://'+server+'/products', params={'page': 1, 'limit_per_page': limit_per_page})
+            self.assertEqual(len(response.json()), limit_per_page)
             self.assertEqual(response.json()[1]["name"], 'coin')
         except:
             self.fail("Failed to establish a new connection")

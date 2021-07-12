@@ -72,7 +72,7 @@ curl http://localhost:5000/product/0
 5. **Получение каталога товаров**
 
 ```bash
-curl http://localhost:5000/products
+curl "http://localhost:5000/products?page=1&limit_per_page=2"
 ```
 
 ## Часто используемые команды для работа с Docker-контейнерами

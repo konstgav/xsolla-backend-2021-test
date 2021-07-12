@@ -88,9 +88,22 @@ paths:
     get:
       tags:
       - product
-      summary: Find all products
+      summary: Paginate products
       description: Get all products
       operationId: getAllProducts
+      parameters:
+      - name: page
+        in: path
+        description: Page number
+        schema:
+          type: integer
+          format: int64
+      - name: limit_per_page
+        in: path
+        description: Maximum number of products per page
+        schema:
+          type: integer
+          format: int64
       responses:
         200:
           description: successful operation

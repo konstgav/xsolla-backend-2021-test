@@ -6,7 +6,7 @@ application = Flask(__name__)
 api = Api(application)
 application.config['MONGODB_SETTINGS'] = {
     'db': 'product',
-    'host': 'mongo-host',
+   # 'host': 'mongo-host',
     'port': 27017
 }
 db = MongoEngine()
@@ -30,8 +30,10 @@ parser.add_argument('sku', type=str)
 parser.add_argument('name', type=str)
 parser.add_argument('type', type=str)
 parser.add_argument('price', type=int, help='price must be integer')
-#parser.add_argument('page', type=int, help='page must be integer')
-#parser.add_argument('limit_per_page', type=int, help='limit_per_page must be integer')
+
+paginator_parser = reqparse.RequestParser()
+paginator_parser.add_argument('page', type=int, help='page must be integer')
+paginator_parser.add_argument('limit_per_page', type=int, help='limit_per_page must be integer')
 
 resource_fields = {
     '_id': fields.Integer,
@@ -81,13 +83,15 @@ class Product(Resource):
 class ProductsList(Resource):
     @marshal_with(resource_fields)
     def get(self):
-        args = parser.parse_args()
+        args = paginator_parser.parse_args()
+        print(args)
         page = 1
-#        if args['page']:
-#            page = args['page']
+        if args['page']:
+            page = args['page']
         limit = 10
-#        if args['limit_per_page']:
-#            limit = args['limit_per_page']
+        if args['limit_per_page']:
+            limit = args['limit_per_page']
+            print(limit) 
         products = ProductModel.objects.paginate(page=page, per_page=limit)
         return products.items, 200
         
@@ -98,7 +102,7 @@ class ProductsList(Resource):
         product = ProductModel(_id=id, sku=args['sku'], name=args['name'], type=args['type'], price=args['price']).save()
         return product, 201
 
-## Setup the Api resource routing
+## Setup the API resource routing
 api.add_resource(Product, '/product/<int:id>')
 api.add_resource(ProductsList, '/products')
 
