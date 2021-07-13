@@ -1,6 +1,7 @@
 from flask import Flask, jsonify
 from flask_restful import reqparse, Api, Resource, fields, marshal_with
 from flask_mongoengine import MongoEngine
+from flask_swagger_ui import get_swaggerui_blueprint
 
 application = Flask(__name__)
 api = Api(application)
@@ -11,6 +12,19 @@ application.config['MONGODB_SETTINGS'] = {
 }
 db = MongoEngine()
 db.init_app(application)
+
+### swagger specific ###
+SWAGGER_URL = '/swagger'
+API_URL = '/static/openapi.yaml'
+SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name': "api"
+    }
+)
+application.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
+### end swagger specific ###
 
 class ProductModel(db.Document):
     _id = db.IntField()

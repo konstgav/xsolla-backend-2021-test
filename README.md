@@ -21,7 +21,7 @@ Test for Xsolla School 2021. Backend: RESTful API for e-commerce game developer'
 2. Создан скрипт `prepare_mongo.py`, который наполняет СУБД тестовыми данными из набора `test_dataset.json`.
 3. Созданы модульные тесты `utest_api_resources.py`
 4. Добавлена фильтрация товаров по их типу в **Методе получения каталога товаров**.
-5. Составлена спецификация OpenAPI 3.0 в `openapi.yaml`.
+5. Составлена спецификация OpenAPI 3.0 в `./app/static/openapi.yaml`.
 6. Созданы Dockerfile для создания образа с flask-приложением и Docker-compose файл для развертывания приложения.
 
 ## Способ тестирования приложения
@@ -32,6 +32,12 @@ Test for Xsolla School 2021. Backend: RESTful API for e-commerce game developer'
 git clone https://github.com/konstgav/xsolla-backend-2021-test.git
 cd xsolla-backend-2021-test
 docker-compose up 
+```
+
+Описание спецификации OpenAPI 3.0 доступно по ссылке
+
+```bash
+http://localhost:5000/swagger/
 ```
 
 Для тестирования используются пакеты `pymongo`, `requests`, `unittest`. Для запуска автотестов выполните команды:
