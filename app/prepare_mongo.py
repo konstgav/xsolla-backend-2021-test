@@ -1,12 +1,17 @@
 # Creates mongobd collection and fills it with dataset
 from pymongo import MongoClient
 import json
+import os
 
 dataset_filename = "test_dataset.json"
 database_name = "product"
 collection_name = "productmodel"
 
-client = MongoClient()
+password = os.environ.get("MONGO_PASSWD")
+if password:
+    client = MongoClient("mongodb+srv://konst:"+password+"@cluster0.73r12.mongodb.net/product?retryWrites=true&w=majority")
+else:
+    client = MongoClient()
 db = client[database_name]
 collection = db[collection_name]
 collection.drop()

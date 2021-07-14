@@ -2,14 +2,19 @@ from flask import Flask, jsonify
 from flask_restful import reqparse, Api, Resource, fields, marshal_with
 from flask_mongoengine import MongoEngine
 from flask_swagger_ui import get_swaggerui_blueprint
+import os
 
 application = Flask(__name__)
 api = Api(application)
-application.config['MONGODB_SETTINGS'] = {
-    'db': 'product',
-    'host': 'mongo-host',
-    'port': 27017
-}
+password = os.environ.get("MONGO_PASSWD")
+if password:
+    application.config["MONGODB_HOST"] = "mongodb+srv://konst:"+password+"@cluster0.73r12.mongodb.net/product?retryWrites=true&w=majority"
+else:
+    application.config['MONGODB_SETTINGS'] = {
+        'db': 'product',
+        'host': 'mongo-host',
+        'port': 27017
+    }
 db = MongoEngine()
 db.init_app(application)
 
