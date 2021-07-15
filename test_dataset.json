@@ -1,4 +1,3 @@
-
 [
     {"_id": 0, "sku": "a0", "name": "tank", "type": "item", "price": 124},
     {"_id": 1, "sku": "a1", "name": "coin", "type": "item", "price": 1},

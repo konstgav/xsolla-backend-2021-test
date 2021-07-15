@@ -3,7 +3,6 @@ services:
 
   flask:
     build:
-      context: app
       dockerfile: Dockerfile
     container_name: flask
     image: konstgav/flask-python:3.9
