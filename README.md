@@ -3,7 +3,9 @@
 Test for Xsolla School 2021. Backend: RESTful API for e-commerce game developer's system.
 
 https://xsolla-backend-2021-test.herokuapp.com/
+
 https://xsolla-backend-2021-test.herokuapp.com/swagger
+
 https://xsolla-backend-2021-test.herokuapp.com/products
 
 **Задача**: реализация системы управления товарами для площадки электронной коммерции (продажа таких товаров, как игры, мерч, виртуальная валюта и др.)
@@ -21,18 +23,18 @@ https://xsolla-backend-2021-test.herokuapp.com/products
 
 ## Дополнительная часть - доработка системы управления товарами
 
-1. Информация о товарах хранится в локальной базе данных mongodb, для работы с которой используется отображение объектов в документы (ODM) [MongoEngine](http://mongoengine.org/).
+1. Информация о товарах хранится в базе данных mongodb, для работы с которой используется отображение объектов в документы (ODM) [MongoEngine](http://mongoengine.org/).
 2. Создан скрипт `prepare_mongo.py`, который наполняет СУБД тестовыми данными из набора `test_dataset.json`.
 3. Созданы модульные тесты `utest_api_resources.py`
 4. Добавлена фильтрация товаров по их типу в **Методе получения каталога товаров**.
 5. Составлена спецификация OpenAPI 3.0 в `./app/static/openapi.yaml`.
 6. Созданы Dockerfile для создания образа с flask-приложением и Docker-compose файл для развертывания приложения.
-7. База данны `mongodb` разворачивается в облаке и локально. Если определена переменная окружения `MONGO_PASSWD`, то приложение подключается к облачной базе данны `Atlas MongoDB`, иначе - локально.
-8. Приложение развернуто на [`heroku`](https://xsolla-backend-2021-test.herokuapp.com/)
+7. База данны `mongodb` разворачивается в облаке или локально. Если определена переменная окружения `MONGO_PASSWD`, то приложение подключается к облачной базе данны `Atlas MongoDB`, иначе - локально.
+8. Приложение развернуто на [`heroku`](https://xsolla-backend-2021-test.herokuapp.com/). Настроен автоматический деплой приложения на heroku после коммита в ветку heroku гитхаба.
 
 ## Способ тестирования приложения
 
-Для развертывания приложения с помощью `docker-compose` необходимо выполнить команды:  
+Для локального развертывания приложения с помощью `docker-compose` необходимо выполнить команды:  
 
 ```bash
 git clone https://github.com/konstgav/xsolla-backend-2021-test.git
@@ -49,7 +51,7 @@ http://localhost:5000/swagger/
 Для тестирования используются пакеты `pymongo`, `requests`, `unittest`. Для запуска автотестов выполните команды:
 
 ```bash
-pip3 install pymongo
+pip3 install pymongo 
 pip3 install requests
 cd app
 python3 -m unittest -v utest_api_resources.py
