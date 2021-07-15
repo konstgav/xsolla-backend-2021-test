@@ -2,6 +2,10 @@
 
 Test for Xsolla School 2021. Backend: RESTful API for e-commerce game developer's system.
 
+https://xsolla-backend-2021-test.herokuapp.com/
+https://xsolla-backend-2021-test.herokuapp.com/swagger
+https://xsolla-backend-2021-test.herokuapp.com/products
+
 **Задача**: реализация системы управления товарами для площадки электронной коммерции (продажа таких товаров, как игры, мерч, виртуальная валюта и др.)
 
 ## Обязательная часть
@@ -24,6 +28,7 @@ Test for Xsolla School 2021. Backend: RESTful API for e-commerce game developer'
 5. Составлена спецификация OpenAPI 3.0 в `./app/static/openapi.yaml`.
 6. Созданы Dockerfile для создания образа с flask-приложением и Docker-compose файл для развертывания приложения.
 7. База данны `mongodb` разворачивается в облаке и локально. Если определена переменная окружения `MONGO_PASSWD`, то приложение подключается к облачной базе данны `Atlas MongoDB`, иначе - локально.
+8. Приложение развернуто на [`heroku`](https://xsolla-backend-2021-test.herokuapp.com/)
 
 ## Способ тестирования приложения
 
@@ -92,4 +97,14 @@ docker kill -f $(docker ps -a -q)
 docker rm -f $(docker ps -a -q)
 docker rmi -f $(docker images -a -q)
 docker exec -it flask bash
+```
+
+## Комадны heroku
+
+```bash
+heroku login
+git push origin heroku #Коммит в ветку heroku githubа автоматически инициирует деплой на heroku
+heroku ps:scale web=1
+heroku ps
+heroku logs
 ```
